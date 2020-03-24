@@ -8,6 +8,7 @@ import io
 import os
 import base64
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "static"
 ALLOWED_EXTENSIONS = set(["mp3", "wav"])
@@ -17,9 +18,46 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
 
-@app.route("/")
+@app.route("/<filename>")
+def uploaded_file(filename):
+
+    mp3_audio = AudioSegment.from_file(UPLOAD_FOLDER + "/" + filename, format="mp3")
+    wname = mktemp(".wav")
+    mp3_audio.export(wname, format="wav")
+    FS, data = wavfile.read(wname)
+    data = data.mean(axis=1)
+    pngImageB64String = plot_image(data, FS)
+    return render_template("template.html", name=filename, url=pngImageB64String)
+    # return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1] in ALLOWED_EXTENSIONS
+
+
+@app.route("/", methods=["GET", "POST"])
+def upload_file():
+    if request.method == "POST":
+        file = request.files["file"]
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print(os.listdir())
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            return redirect(url_for("uploaded_file", filename=filename))
+    return """
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    """
+
+
+@app.route("/example")
 def hello():
-    filename = 'static/example.mp3'
+    filename = "static/example.mp3"
     mp3_audio = AudioSegment.from_file(filename, format="mp3")
     wname = mktemp(".wav")
     mp3_audio.export(wname, format="wav")
