@@ -31,12 +31,12 @@ def uploaded_file(filename):
     # mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
     # wname = mktemp(".wav")
     # mp3_audio.export(wname, format="wav")
-    print('My path:', path_to_file)
-    print('Folders:', os.listdir() )
-    y, sr = librosa.load(path_to_file)
+    print("My path:", path_to_file)
+    print("Folders:", os.listdir())
+    y, sr = librosa.load(str(path_to_file))
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
-    os.remove(path_to_file)
+    os.remove(str(path_to_file))
     return render_template("template.html", name=filename, url=pngImageB64String)
 
 
