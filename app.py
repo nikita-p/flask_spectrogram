@@ -32,31 +32,15 @@ def uploaded_file(filename):
     print("Folders:", os.listdir())
     print("F static:", os.listdir("./static"))
     mp3_audio = AudioSegment.from_mp3(path_to_file)
-    wname = mktemp(".wav")
+    os.remove(path_to_file)
+    wname = path_to_file + ".wav"
     print("W  path:", wname)
     mp3_audio.export(wname, format="wav")
     y, sr = librosa.load(wname)
+    os.remove(wname)
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
-    os.remove(path_to_file)
     return render_template("template.html", name=filename, url=pngImageB64String)
-
-
-@app.route("/old/<filename>")
-def uploaded_file_old(filename):
-    path_to_file = UPLOAD_FOLDER + "/" + filename
-    print("My path:", path_to_file)
-    print("Folders:", os.listdir())
-    print("F static:", os.listdir("./static"))
-    mp3_audio = AudioSegment.from_mp3(path_to_file)
-    wname = mktemp(".wav")
-    print("W  path:", wname)
-    mp3_audio.export(wname, format="wav")
-    # y, sr = librosa.load(path_to_file)
-    # D = np.abs(librosa.stft(y))
-    # pngImageB64String = plot_image(D)
-    # os.remove(path_to_file)
-    return render_template("template.html", name=filename, url="pngImageB64String")
 
 
 def allowed_file(filename):
@@ -97,13 +81,15 @@ def plot_image(D):
 
 @app.route("/example")
 def plotView():
-    filename = "static/example37646823.mp3"
+    path_to_file = "static/example37646823.mp3"
     print("Folders:", os.listdir())
     print("F static:", os.listdir("./static"))
-    mp3_audio = AudioSegment.from_file(filename, format="mp3")
-    wname = mktemp(".wav")
+    mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
+    wname = path_to_file + ".wav"
+    print("W  path:", wname)
     mp3_audio.export(wname, format="wav")
     y, sr = librosa.load(wname)
+    os.remove(wname)
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
     return render_template("template.html", name="Example.mp3", url=pngImageB64String)
