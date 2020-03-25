@@ -25,16 +25,17 @@ def hello():
     return "Hello World!"
 
 
+# https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git
 @app.route("/<filename>")
 def uploaded_file(filename):
     path_to_file = UPLOAD_FOLDER + "/" + filename
     print("My path:", path_to_file)
     print("Folders:", os.listdir())
     print("F static:", os.listdir("./static"))
-    mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
-    wname = mktemp(".wav")
-    print("W  path:", wname)
-    mp3_audio.export(wname, format="wav")
+    # mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
+    # wname = mktemp(".wav")
+    # print("W  path:", wname)
+    # mp3_audio.export(wname, format="wav")
     y, sr = librosa.load(path_to_file)
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
