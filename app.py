@@ -1,4 +1,11 @@
-from flask import Flask, render_template, Response, request, redirect, url_for
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    send_from_directory,
+)
 import io
 import os
 import base64
@@ -7,10 +14,8 @@ import librosa.display
 import numpy as np
 import matplotlib.pyplot as plt
 from werkzeug.utils import secure_filename
-from flask import send_from_directory
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from pydub import AudioSegment
-from tempfile import mktemp
 
 UPLOAD_FOLDER = "static"
 ALLOWED_EXTENSIONS = set(["mp3", "wav"])
@@ -35,10 +40,10 @@ def uploaded_file(filename):
         mp3_audio = AudioSegment.from_mp3(path_to_file)
         os.remove(path_to_file)
         wname = path_to_file + ".wav"
+        mp3_audio.export(wname, format="wav")
     if path_to_file[-3:].lower() == "wav":
         wname = path_to_file
     print("W  path:", wname)
-    mp3_audio.export(wname, format="wav")
     y, sr = librosa.load(wname, duration=60)
     os.remove(wname)
     D = np.abs(librosa.stft(y))
@@ -56,9 +61,7 @@ def upload_file():
         file = request.files["file"]
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # print(os.listdir())
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            # return redirect(url_for("plotView", filename=filename))
             return redirect(url_for("uploaded_file", filename=filename))
     return render_template("template_start.html")
 

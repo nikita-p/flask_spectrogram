@@ -1,6 +1,8 @@
-# MP3 spectrogram: simple flask web-application
+# Audio spectrogram: simple flask web-application
 
 ## [Link](https://flasktrain233.herokuapp.com)
+
+Mp3/Wav spectrogram (60 s for long records)
 
 Buildpacks:
 * `heroku/python`

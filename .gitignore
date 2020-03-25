@@ -1,4 +1,6 @@
 .vscode
 *.mp3
 .ipynb_checkpoints
-
+*.ipynb
+__pycache__
+*.png
