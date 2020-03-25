@@ -28,11 +28,11 @@ def hello():
 @app.route("/<filename>")
 def uploaded_file(filename):
     path_to_file = UPLOAD_FOLDER + "/" + filename
-    # mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
-    # wname = mktemp(".wav")
-    # mp3_audio.export(wname, format="wav")
+    mp3_audio = AudioSegment.from_file(path_to_file, format="mp3")
+    wname = mktemp(".wav")
+    mp3_audio.export(wname, format="wav")
     print("My path:", path_to_file)
-    # print("W  path:", wname)
+    print("W  path:", wname)
     print("Folders:", os.listdir())
     y, sr = librosa.load(path_to_file)
     D = np.abs(librosa.stft(y))
