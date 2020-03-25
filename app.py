@@ -31,9 +31,12 @@ def uploaded_file(filename):
     print("My path:", path_to_file)
     print("Folders:", os.listdir())
     print("F static:", os.listdir("./static"))
-    mp3_audio = AudioSegment.from_mp3(path_to_file)
-    os.remove(path_to_file)
-    wname = path_to_file + ".wav"
+    if path_to_file[-3:].lower() == "mp3":
+        mp3_audio = AudioSegment.from_mp3(path_to_file)
+        os.remove(path_to_file)
+        wname = path_to_file + ".wav"
+    if path_to_file[-3:].lower() == "wav":
+        wname = path_to_file
     print("W  path:", wname)
     mp3_audio.export(wname, format="wav")
     y, sr = librosa.load(wname)
@@ -79,7 +82,6 @@ def plot_image(D):
     return pngImageB64String
 
 
-# https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku-community/apt.tgz
 @app.route("/example")
 def plotView():
     path_to_file = "static/example37646823.mp3"
