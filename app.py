@@ -17,7 +17,7 @@ ALLOWED_EXTENSIONS = set(["mp3", "wav"])
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 11 * 1024 * 1024
 
 
 @app.route("/page")
@@ -39,7 +39,7 @@ def uploaded_file(filename):
         wname = path_to_file
     print("W  path:", wname)
     mp3_audio.export(wname, format="wav")
-    y, sr = librosa.load(wname)
+    y, sr = librosa.load(wname, duration=60)
     os.remove(wname)
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
