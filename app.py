@@ -79,6 +79,7 @@ def plot_image(D):
     return pngImageB64String
 
 
+# https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku-community/apt.tgz
 @app.route("/example")
 def plotView():
     path_to_file = "static/example37646823.mp3"
