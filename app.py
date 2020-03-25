@@ -34,10 +34,11 @@ def uploaded_file(filename):
     print("My path:", path_to_file)
     print("W  path:", wname)
     print("Folders:", os.listdir())
+    print("F static:", os.listdir("./static"))
     y, sr = librosa.load(path_to_file)
     D = np.abs(librosa.stft(y))
     pngImageB64String = plot_image(D)
-    os.remove(path_to_file)
+    # os.remove(path_to_file)
     return render_template("template.html", name=filename, url=pngImageB64String)
 
 
